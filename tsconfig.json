@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "lib": ["es2019"],
+    "types": ["node"],
     "outDir": "./lib",
     "rootDir": "./src",
     "target": "es2019",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "sourceMap": true,
     "experimentalDecorators": true,
     "pretty": true,

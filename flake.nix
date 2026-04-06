@@ -62,6 +62,7 @@
             shellcheck
             shfmt
             statix
+            npm-check
           ];
 
           # npm forces output that can't possibly be useful to stdout so redirect
