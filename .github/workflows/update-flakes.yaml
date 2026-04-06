@@ -39,7 +39,7 @@ jobs:
           extra-conf: accept-flake-config = true
       - run: git config --global user.email "noreply@github.com"
       - run: git config --global user.name "github[bot]"
-      - uses: fredclausen/flake-update-action@b64bc2039bda39d47858d4e8d69ebf698c63630c # main
+      - uses: fredsystems/flake-update-action@53aaa93300b2602d8db4d33efc08134dc4b921e2 # v3.0.3
         with:
           dependency: ${{ matrix.flake }}
           pull-request-token: ${{ secrets.GITHUB_TOKEN }}
@@ -47,4 +47,5 @@ jobs:
           delete-branch: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-branch-prefix: update-
-          automerge: false
+          automerge: true
+          push-to-fork: fredsystems/flake-dep-info-action
