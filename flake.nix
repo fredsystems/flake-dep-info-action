@@ -6,71 +6,65 @@
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
+    precommit-base = {
+      url = "github:fredsystems/pre-commit-checks";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, git-hooks }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      precommit-base,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs.lib) mkForce;
+
+        precommitCheck = precommit-base.lib.mkCheck {
+          inherit system;
+          src = ./.;
+
+          extraExcludes = [
+            "^dist/"
+            "^CHANGELOG\\.md$"
+          ];
+
+          check_javascript = true;
+          javascript = {
+            enableBiome = true;
+            enableTsc = true;
+            tsConfig = "tsconfig.json";
+          };
+        };
       in
       {
         checks = {
-          pre-commit-check = git-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              statix.enable = true;
-              nixpkgs-fmt.enable = true;
-              shellcheck.enable = true;
-
-              prettier = {
-                enable = true;
-                entry = mkForce "${pkgs.nodejs}/bin/npm run format";
-                types_or = [ "json" "toml" "yaml" "ts" ];
-                excludes = [
-                  "package-lock.json"
-                ];
-              };
-
-              eslint = {
-                enable = true;
-                entry = mkForce "${pkgs.nodejs}/bin/npm run lint";
-              };
-
-              shfmt = {
-                enable = true;
-                entry = mkForce "${pkgs.shfmt}/bin/shfmt -i 2 -sr -d -s -l";
-                files = "\\.sh$";
-              };
-            };
-
-          };
+          pre-commit-check = precommitCheck;
         };
 
         devShell = pkgs.mkShell {
           name = "flake-dep-info-action";
-          buildInputs = with pkgs; [
-            fd
-            git
-            nixpkgs-fmt
-            nodejs
-            shellcheck
-            shfmt
-            statix
-            npm-check
-          ];
+          buildInputs =
+            precommitCheck.enabledPackages
+            ++ (with pkgs; [
+              typescript-go
+              fd
+              git
+              nodejs_24
+              npm-check
+            ]);
 
           # npm forces output that can't possibly be useful to stdout so redirect
           # stdout to stderr
           shellHook = ''
-            ${self.checks.${system}.pre-commit-check.shellHook}
+            ${precommitCheck.shellHook}
             npm install --no-fund 1>&2
           '';
         };
-      });
+      }
+    );
 }
