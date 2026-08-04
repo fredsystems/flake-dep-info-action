@@ -9,9 +9,8 @@
     "build": "tsc",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "lint": "eslint .",
     "package": "ncc build --no-source-map-register --license licenses.txt --target es2022",
-    "all": "npm run build && npm run format && npm run lint && npm run package"
+    "all": "npm run build && npm run format-check && npm run package"
   },
   "repository": {
     "type": "git",
@@ -34,20 +33,15 @@
     "@actions/core": "3.0.1"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/changelog": "7.0.0",
     "@semantic-release/commit-analyzer": "13.0.1",
-    "@semantic-release/git": "10.0.1",
+    "@semantic-release/git": "11.0.1",
     "@semantic-release/release-notes-generator": "14.1.1",
-    "@types/eslint": "9.6.1",
-    "@types/node": "25.9.4",
-    "@typescript-eslint/eslint-plugin": "8.62.1",
-    "@typescript-eslint/parser": "8.62.1",
+    "@types/node": "25.9.5",
     "@vercel/ncc": "0.44.1",
-    "eslint": "9.39.4",
-    "eslint-plugin-github": "6.0.0",
-    "prettier": "3.9.4",
-    "semantic-release": "25.0.5",
-    "typescript": "6.0.3"
+    "prettier": "3.9.6",
+    "semantic-release": "25.0.8",
+    "typescript": "7.0.2"
   },
   "release": {
     "branches": [

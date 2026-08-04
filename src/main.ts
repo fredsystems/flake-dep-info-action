@@ -53,6 +53,6 @@ interface Lock {
     core.setOutput("rev", dep.rev);
     core.setOutput("short-rev", dep.rev.slice(0, shortRevLength));
   } catch (error) {
-    core.setFailed(`Action failed with error: ${error}`); // eslint-disable-line i18n-text/no-en
+    core.setFailed(`Action failed with error: ${error}`);
   }
 })();
