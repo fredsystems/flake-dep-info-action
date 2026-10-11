@@ -51,7 +51,7 @@
           buildInputs =
             precommitCheck.enabledPackages
             ++ (with pkgs; [
-              typescript-go
+              typescript
               fd
               git
               nodejs_24
